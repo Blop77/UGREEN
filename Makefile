@@ -1,26 +1,19 @@
-CC      ?= cc
-CFLAGS  ?= -O2 -Wall -Wextra -Wpedantic -std=c11
-LDFLAGS ?=
+SKILL   = lecture-revision-kit
+KIT     ?= $(HOME)/.claude/skills/uliya-skill-kit
+DIST    = dist
 
-SRC = src/main.c src/scan.c src/hash.c src/dupes.c src/ai.c
-OBJ = $(SRC:src/%.c=build/%.o)
-BIN = build/nasweep
+.PHONY: check package clean
 
-.PHONY: all test clean
+# Run the official UGOS static checker (needs uliya-skill-kit installed).
+check:
+	node $(KIT)/scripts/check-skill.mjs skill/$(SKILL)
 
-all: $(BIN)
-
-$(BIN): $(OBJ)
-	$(CC) $(LDFLAGS) -o $@ $^
-
-build/%.o: src/%.c src/*.h | build
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-build:
-	mkdir -p build
-
-test: $(BIN)
-	sh tests/run_tests.sh $(BIN)
+# Build the Round 1 Pre-test Skill Package. The ZIP holds only the skill folder.
+package: check
+	mkdir -p $(DIST)
+	rm -f $(DIST)/$(SKILL).zip
+	cd skill && zip -rX ../$(DIST)/$(SKILL).zip $(SKILL)
+	@unzip -l $(DIST)/$(SKILL).zip
 
 clean:
-	rm -rf build
+	rm -rf $(DIST)

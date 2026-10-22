@@ -1,55 +1,44 @@
-# NASweep: Local AI Storage Cleaner for Your NAS
+# Lecture Revision Kit
 
-![NASweep](assets/thumbnail.png)
+![Lecture Revision Kit](assets/thumbnail.png)
 
-A lightweight C daemon that runs 24/7 on your NAS, finds duplicate and blurry
-files, and uses local AI to explain what's safe to delete. Private by design:
-no cloud, nothing leaves home.
+A Uliya Skill for UGREEN AI NAS that turns one course's lecture recordings,
+slides and handouts, and whiteboard photos into one note per lecture plus an
+exam revision sheet. Every point is traced back to its source (recording time,
+slide page, or photo file name).
 
-Built for the **UGREEN Hackathon 2026 on AI NAS**, track *Automate Your Workflow*.
+Entry for the **UGREEN Hackathon 2026 on AI NAS**, track *Automate Your Workflow*.
 
 ## How it works
 
-1. **Scan**: walk the share with `nftw()` (symlinks are not followed).
-2. **Group by size**: only files of the same size can be duplicates, so most files are never read.
-3. **Hash**: FNV-1a 64-bit over the contents of same-size files.
-4. **Confirm**: byte-for-byte compare, so a hash collision can never cause a false match.
-5. **Explain** *(in progress)*: send the report to a local LLM (llama.cpp / Ollama) for a plain-language summary.
+| Step | Expert | Capability |
+|---|---|---|
+| Find the course's recordings, documents and photos | `file-agent` | `ug-filesystem` |
+| Transcribe lecture recordings | `knowledge-agent` | `ug-knowledge` |
+| Read text from whiteboard photos | `photo-agent` | `ug-photo` |
+| Outline slides, draft notes and the revision sheet | `document-agent` | `ug-document` |
+| Save notes after the user confirms | `knowledge-agent`, `file-agent` | `ug-knowledge`, `ug-filesystem` |
+
+Original files are never moved, edited or deleted. New notes are saved only
+after confirmation and never overwrite existing files.
+
+## Repository layout
 
 ```
-src/
-  main.c    CLI, text + JSON output
-  scan.c    recursive directory walk
-  hash.c    FNV-1a hashing, byte compare
-  dupes.c   size -> hash -> confirm pipeline
-  ai.c      local LLM client (stub)
-tests/
-  run_tests.sh   end-to-end tests
+skill/lecture-revision-kit/   the Skill (this is what gets submitted)
+  SKILL.md                    entry point: goal, inputs, workflow, failure handling
+  references/user-guide.md    user guide
+  references/disclosures.md   third-party, license and AI tool disclosures
+assets/                       Devpost thumbnail (1200x800)
+Makefile                      check and package helpers
 ```
 
-## Build and run
+## Check and package
 
-```sh
-make
-./build/nasweep /path/to/share
-./build/nasweep --json /path/to/share
-./build/nasweep --ai http://localhost:8080/v1/chat/completions /path/to/share
-make test
+Requires Node.js and the official UGOS Skill Creation Tool (`uliya-skill-kit`)
+installed in your AI assistant's skills folder.
+
 ```
-
-### Docker (on the NAS)
-
-```sh
-docker build -t nasweep .
-docker run --rm -v /volume1/photos:/data:ro nasweep
+make check     # run the official static checker
+make package   # build dist/lecture-revision-kit.zip for Round 1
 ```
-
-## Roadmap
-
-- [x] Exact duplicate detection (size, hash, byte compare)
-- [x] Text and JSON reports
-- [ ] Local LLM explanations via llama.cpp / Ollama (`src/ai.c`)
-- [ ] Near-duplicate and blurry photo detection (perceptual hash)
-- [ ] Daemon mode: rescan on a schedule, notify on new waste
-- [ ] Safe cleanup: move to a quarantine folder instead of deleting
-- [ ] Small web UI for reviewing groups
