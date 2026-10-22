@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"><style>
+.doc{background:#fffaf0;color:#1b2440;border-radius:16px;padding:26px 32px;font-size:18px;line-height:1.5;height:590px;overflow:hidden;font-size:20px;line-height:1.6}
+.doc h2{font-size:28px;margin-bottom:4px}.doc h3{font-size:21px;color:#a86b00;margin:18px 0 4px}
+.s{font:13px "DejaVu Sans Mono",monospace;color:#a86b00;background:#fdecc8;padding:1px 6px;border-radius:5px;white-space:nowrap}
+.warn{background:#ffe4dd;border-left:4px solid #e0573f;padding:8px 12px;border-radius:6px;margin-top:6px;font-size:16px}
+ul{padding-left:22px}
+</style></head><body style="padding:44px 64px">
+<h1 style="font-size:34px;margin-bottom:6px">Sample output: <span>Lecture 05 notes</span></h1><div class="sub" style="font-size:18px;margin-bottom:20px">Illustrative mock-up of the note format. Not real NAS output.</div>
+<div class="doc">
+<h2>Lecture 05 – Memory Management</h2>
+<div style="color:#5a6480;font-size:15px">Sources: Lecture 05.m4a · Lecture 05 - slides.pdf · IMG_2041.jpg</div>
+<h3>Key topics</h3>
+<ul><li>Paging splits memory into fixed-size frames <span class="s">[Slides p.4]</span> <span class="s">[Rec 06:10]</span></li>
+<li>TLB caches recent page-table entries <span class="s">[Slides p.7]</span></li></ul>
+<h3>Formulas</h3>
+<ul><li>EAT = h·(t<sub>TLB</sub> + t<sub>mem</sub>) + (1−h)·(t<sub>TLB</sub> + 2·t<sub>mem</sub>) <span class="s">[Board IMG_2041]</span></li></ul>
+<h3>Lecturer emphasis</h3>
+<ul><li>“Paging versus segmentation will definitely be in the exam.” <span class="s">[Rec 14:32]</span></li></ul>
+<h3>Conflicts and gaps</h3>
+<div class="warn">Slides give a 4 KB page size <span class="s">[Slides p.5]</span>, but the lecture example used 8 KB <span class="s">[Rec 21:05]</span>. Check with your lecturer.</div>
+</div></body></html>

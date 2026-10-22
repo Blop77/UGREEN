@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Lecture Revision Kit – Project Proposal</title><style>
+@page{size:A4;margin:12mm 14mm}
+*{box-sizing:border-box}
+body{font-family:"DejaVu Sans",sans-serif;font-size:9.4pt;line-height:1.34;color:#1b2233;margin:0}
+header{border-bottom:2.5px solid #e0a52e;padding-bottom:6px;margin-bottom:8px}
+h1{font-size:17pt;margin:0;color:#0f1a33}
+.meta{color:#4a5670;font-size:8.8pt;margin-top:2px}
+h2{font-size:9.8pt;color:#0f1a33;margin:6px 0 1px}
+h2 span{color:#b37a08}
+p{margin:0}
+table{border-collapse:collapse;width:100%;font-size:8.8pt;margin-top:2px}
+td,th{border:1px solid #cdd4e2;padding:2.5px 5px;text-align:left;vertical-align:top}
+th{background:#f3f5fa}
+code{font-family:"DejaVu Sans Mono",monospace;font-size:8.2pt;background:#f3f5fa;padding:0 2px}
+.note{margin-top:8px;border-top:1px solid #cdd4e2;padding-top:5px;font-size:8.4pt;color:#4a5670}
+</style></head><body>
+<header><h1>Lecture Revision Kit — Project Proposal</h1>
+<div class="meta">Skill: <code>lecture-revision-kit</code> · Track: Automate Your Workflow · UGREEN Hackathon 2026 on AI NAS</div></header>
+
+<div class="a">
+<h2><span>1.</span> What does your Skill do?</h2>
+<p>It turns one course's lecture recordings, slides and whiteboard photos stored on the NAS into per-lecture notes and an exam revision sheet, with every point traced to its source.</p>
+
+<h2><span>2.</span> Target user and problem</h2>
+<p>College students who record lectures and photograph the board. Before exams this material is scattered across audio, PDFs and images. Replaying hours of recordings and cross-checking slides takes days, and generic summaries miss what the lecturer actually stressed.</p>
+
+<h2><span>3.</span> Solution</h2>
+<p>Uliya gathers all three source types, converts each into text on the NAS, and merges them into structured notes: topics, definitions, formulas, examples, lecturer-emphasis moments, and conflicts between sources. A revision sheet ranks topics and adds ten practice questions.</p>
+
+<h2><span>4.</span> Main user flow</h2>
+<p>“Make revision notes for my Operating Systems course.” → Uliya confirms folder and lectures → user approves a grouped file inventory → transcription, OCR and slide outlines → note preview → save to a <code>Revision</code> folder after confirmation → report of saved files and missing sources.</p>
+
+<h2><span>5.</span> Differentiation</h2>
+<p>Common AI tools summarize one file at a time and need cloud uploads. This Skill fuses three formats per lecture, cites the exact recording time, slide page or photo for every point, detects what the lecturer emphasized, and flags where slides and speech disagree. Data never leaves the NAS.</p>
+
+<h2><span>6.</span> UGREEN AI NAS features used</h2>
+<table><tr><th>Step</th><th>Capability</th><th>Expert</th></tr>
+<tr><td>1 Find course files</td><td><code>ug-filesystem</code> find</td><td>file-agent</td></tr>
+<tr><td>3 Transcribe recordings</td><td><code>ug-knowledge</code> audio-transcription</td><td>knowledge-agent</td></tr>
+<tr><td>4 Read whiteboard photos</td><td><code>ug-photo</code> vision-ocr</td><td>photo-agent</td></tr>
+<tr><td>5–6 Outline slides, draft notes</td><td><code>ug-document</code> qa, writing</td><td>document-agent</td></tr>
+<tr><td>8 Create folder, save notes</td><td><code>ug-filesystem</code> mkdir, <code>ug-knowledge</code> save-text</td><td>file-agent, knowledge-agent</td></tr></table>
+
+<h2><span>7.</span> Technical approach</h2>
+<p>A Markdown orchestration Skill: the parent only issues <code>delegate</code> commands to four registered experts in a fixed order, passing only real upstream results. Inputs: course folder, scope, recording language, output folder. Originals are read-only; writes happen only after user confirmation and platform approval and never overwrite. Models: the NAS's built-in transcription, OCR and document AI; no external services or keys. All five delegation states and empty or partial results are handled.</p>
+
+<h2><span>8.</span> Progress</h2>
+<p><b>Built:</b> the complete Skill package (SKILL.md, user guide, disclosures), passing the official uliya-skill-kit 0.7.3 static check with zero errors and warnings. <b>Not built:</b> device-tuned wording. <b>Needs NAS testing:</b> 60–90 minute recordings, handwritten board OCR, document-agent limits with long transcripts, and approval prompts while saving.</p>
+
+<h2><span>9.</span> Finalist test plan</h2>
+<p><b>Core 1:</b> one lecture with a recording, slides and two board photos produces one note with a valid source for every point. <b>Core 2:</b> a four-lecture unit produces a ranked revision sheet with ten practice questions; a rerun creates new files without overwriting. <b>Edge:</b> a lecture with only a video and an unreadable photo is reported as partial, nothing is invented, and nothing is saved without confirmation.</p>
+
+<h2><span>10.</span> Limits, risks, dependencies</h2>
+<p>Video is listed but not transcribed; maximum twelve lectures per run. Noisy audio and messy handwriting lower quality and are reported as warnings. Very long transcripts may need per-lecture processing. The Skill depends entirely on the built-in NAS experts.</p>
+</div>
+
+<div class="note"><b>Third-party components and licenses:</b> none. The Skill contains only Markdown; all work is done by UGREEN AI NAS experts. <b>AI tools used:</b> Claude Code (Anthropic) to help draft the Skill and this proposal; UGOS Skill Creation Tool (uliya-skill-kit 0.7.3) for capability checks and static checking.</div>
+</body></html>

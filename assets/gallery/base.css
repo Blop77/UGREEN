@@ -1,0 +1,5 @@
+*{margin:0;box-sizing:border-box}html{background:#0b1220}
+body{width:1200px;height:800px;overflow:hidden;font-family:"DejaVu Sans",sans-serif;background:radial-gradient(circle at 80% 20%,#1d2f57 0,#0f1a33 55%,#0b1220 100%);color:#eef2fb;padding:56px 64px}
+h1{font-size:44px;font-weight:800;margin-bottom:8px}h1 span{color:#ffc457}
+.sub{color:#b3c0dc;font-size:22px;margin-bottom:34px}
+.mono{font-family:"DejaVu Sans Mono",monospace}

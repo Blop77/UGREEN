@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="base.css"><style>
+.row{display:flex;gap:14px;align-items:stretch}
+.st{flex:1;background:#15233f;border:2px solid #2a3d66;border-radius:14px;padding:16px 14px;position:relative}
+.n{width:34px;height:34px;border-radius:50%;background:#ffc457;color:#0b1220;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:10px}
+.t{font-size:19px;font-weight:700;margin-bottom:6px}.d{font-size:15px;color:#b3c0dc;line-height:1.4}
+.ag{margin-top:10px;font:600 13px "DejaVu Sans Mono",monospace;color:#7ad7a8}
+.u{border-color:#ffc457;background:#2a2410}
+.foot{margin-top:34px;display:flex;gap:16px}
+.f{flex:1;background:#121d36;border-left:4px solid #7ad7a8;border-radius:8px;padding:14px 16px;font-size:17px;color:#dbe4f7;line-height:1.4}
+</style></head><body style="padding-top:110px">
+<h1>How <span>Lecture Revision Kit</span> works</h1>
+<div class="sub">Uliya orchestrates four NAS experts. You confirm before anything is saved.</div>
+<div class="row">
+<div class="st"><div class="n">1</div><div class="t">Find</div><div class="d">Recordings, slides and board photos for one course, grouped by lecture</div><div class="ag">file-agent</div></div>
+<div class="st u"><div class="n">2</div><div class="t">You confirm</div><div class="d">Check the lecture list before any processing</div><div class="ag" style="color:#ffc457">waiting_user</div></div>
+<div class="st"><div class="n">3</div><div class="t">Transcribe</div><div class="d">Lecture audio with segment times</div><div class="ag">knowledge-agent</div></div>
+<div class="st"><div class="n">4</div><div class="t">Read board</div><div class="d">OCR on whiteboard photos</div><div class="ag">photo-agent</div></div>
+<div class="st"><div class="n">5</div><div class="t">Outline + write</div><div class="d">Slides outlined, notes and revision sheet drafted</div><div class="ag">document-agent</div></div>
+<div class="st u"><div class="n">6</div><div class="t">Save</div><div class="d">Only after you confirm; never overwrites</div><div class="ag" style="color:#ffc457">knowledge-agent</div></div>
+</div>
+<div class="foot">
+<div class="f"><b>Originals untouched</b><br>Recordings, slides and photos are only read</div>
+<div class="f"><b>Stays on your NAS</b><br>No cloud uploads, no API keys</div>
+<div class="f"><b>Honest results</b><br>Missing or failed sources are reported, never invented</div>
+</div></body></html>
