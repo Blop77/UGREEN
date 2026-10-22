@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{margin:0;box-sizing:border-box}html{background:#070e17}
+body{width:1200px;height:800px;overflow:hidden;font-family:"DejaVu Sans",sans-serif;
+ background:radial-gradient(circle at 78% 30%,#12324a 0,#0b1724 55%,#070e17 100%);color:#e8f1f8;position:relative}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(64,196,170,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(64,196,170,.06) 1px,transparent 1px);background-size:40px 40px}
+.left{position:absolute;left:90px;top:200px;width:620px}
+.tag{display:inline-block;font:600 20px "DejaVu Sans Mono",monospace;color:#3fd2b0;border:2px solid #3fd2b0;border-radius:8px;padding:6px 14px;letter-spacing:2px}
+h1{font-size:112px;font-weight:800;letter-spacing:-4px;margin:28px 0 10px}
+h1 span{color:#3fd2b0}
+p{font-size:36px;line-height:1.3;color:#a9bfd1}
+.chips{margin-top:40px;display:flex;gap:14px}
+.chip{font:600 22px "DejaVu Sans Mono",monospace;background:#132a3d;color:#cfe3f2;padding:10px 18px;border-radius:999px}
+svg{position:absolute;right:50px;top:160px}
+</style></head><body><div class="grid"></div>
+<div class="left">
+ <div class="tag">LOCAL AI · NAS</div>
+ <h1>NAS<span>weep</span></h1>
+ <p>Find duplicates. Explain them<br>with on-device AI. Reclaim space.</p>
+ <div class="chips"><div class="chip">fast C core</div><div class="chip">100% private</div><div class="chip">runs 24/7</div></div>
+</div>
+<svg width="360" height="430" viewBox="0 0 420 500">
+ <rect x="60" y="20" width="300" height="440" rx="28" fill="#13263a" stroke="#2c4a63" stroke-width="4"/>
+ <g font-family="DejaVu Sans Mono" font-size="20">
+  <rect x="95" y="60" width="230" height="66" rx="10" fill="#1c3550"/><circle cx="125" cy="93" r="9" fill="#3fd2b0"/><rect x="150" y="86" width="140" height="14" rx="7" fill="#2f5170"/>
+  <rect x="95" y="146" width="230" height="66" rx="10" fill="#1c3550"/><circle cx="125" cy="179" r="9" fill="#3fd2b0"/><rect x="150" y="172" width="110" height="14" rx="7" fill="#2f5170"/>
+  <rect x="95" y="232" width="230" height="66" rx="10" fill="#1c3550" opacity=".45" stroke="#ff6b6b" stroke-dasharray="8 6" stroke-width="3"/><text x="210" y="272" fill="#ff8a8a" text-anchor="middle">duplicate</text>
+  <rect x="95" y="318" width="230" height="66" rx="10" fill="#1c3550" opacity=".45" stroke="#ff6b6b" stroke-dasharray="8 6" stroke-width="3"/><text x="210" y="358" fill="#ff8a8a" text-anchor="middle">duplicate</text>
+ </g>
+ <g transform="translate(300,300) rotate(-25) scale(.85)">
+  <rect x="-10" y="-150" width="20" height="150" rx="8" fill="#e0b25a"/>
+  <path d="M-45 0 h90 l25 95 h-140 z" fill="#3fd2b0"/>
+  <g stroke="#0b1724" stroke-width="4"><line x1="-25" y1="20" x2="-35" y2="85"/><line x1="0" y1="20" x2="0" y2="85"/><line x1="25" y1="20" x2="35" y2="85"/></g>
+ </g>
+ <g fill="#3fd2b0"><circle cx="70" cy="420" r="6"/><circle cx="40" cy="380" r="4"/><circle cx="100" cy="470" r="5"/></g>
+</svg>
+</body></html>
