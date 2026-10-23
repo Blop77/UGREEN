@@ -28,6 +28,15 @@ Uliya then:
 5. Shows a preview and asks where to save them. The default is a `Revision` folder inside the course folder.
 6. Saves the notes after you confirm, and reports what was saved and what was missing.
 
+## Keep your notes up to date during the semester
+
+Run it again whenever you add new lectures, for example once a week. Uliya finds the notes it saved earlier and asks you to choose:
+
+- **New lectures only** (default): earlier notes are kept, only lectures without a note are processed, and a fresh revision sheet is built from all notes, old and new.
+- **Rebuild all**: every lecture is processed again. Earlier files are kept, and the new ones are saved with a number added to the name.
+
+If there is nothing new, Uliya tells you so and offers to rebuild only the revision sheet.
+
 ## Tips for best results
 
 - Keep one folder per course, and put the lecture number or date in file names, for example `Lecture 05 - Scheduling.m4a` and `Lecture 05 - slides.pdf`.

@@ -32,6 +32,8 @@ Values filled in during the run:
 - `{course_name}`: the name the user used for the course, or else the last part of `{course_folder}`.
 - `{lecture_name}`, `{recording_path}`, `{photo_path}`, `{document_path}`: taken from the confirmed inventory in Step 2.
 - `{transcript}`, `{board_text}`, `{slide_outline}`: the real results of Steps 3, 4 and 5 for that lecture. Use the word none for a source the lecture does not have.
+- `{existing_notes}`: the real text of earlier note files read in Step 1c, each headed by its lecture name. Use the word none on a first run.
+- `{run_mode}`: `new lectures only` or `rebuild all`, chosen by the user in Step 1c. Default on a first run: `rebuild all`.
 - `{lecture_notes}`: all `{lecture_note}` results from Step 6, each headed by its lecture name.
 - `{file_name}` and `{note_text}`: the confirmed file name from Step 7 and the matching text from Step 6.
 
@@ -62,9 +64,17 @@ Run the steps in this order. Each step uses only the real results returned by th
 - If the inventory is an empty result, tell the user no lecture files were found in `{course_folder}` for `{scope}`, and stop. Do not search other folders and do not widen the scope on your own.
 - If more than 12 lecture groups exist, say so and ask the user to narrow `{scope}`.
 
+## Step 1c: Check for notes from earlier runs (repeat use)
+
+`delegate --target file-agent --instruction 'Check whether the folder {output_folder} exists. If it exists, list the Markdown files in it whose names end with - notes.md, with full path and last-modified time, and return the text content of each one. Only read; do not create, move, rename, or delete anything. If the folder does not exist or has no such files, return an empty list and say so.'`
+
+- If the result is an empty list (no results), this is a first run: set `{existing_notes}` to none and `{run_mode}` to `rebuild all`.
+- If earlier notes exist, match each one to a lecture in the Step 1b inventory by its lecture name. Ask the user to choose `new lectures only` (default: keep the earlier notes and process only lectures that have no note yet) or `rebuild all`. This is a `waiting_user` point. Keep the real text of the earlier notes as `{existing_notes}`.
+- If `{run_mode}` is `new lectures only` and every lecture in the inventory already has a note, tell the user there is nothing new to process. Offer to rebuild only the revision sheet from `{existing_notes}`; if the user agrees, go to the second delegation of Step 6. Otherwise finish as `completed` with nothing saved.
+
 ## Step 2: Confirm the inventory with the user
 
-Show the real inventory from Step 1b as a table: lecture, recordings, documents, photos, and video files that will not be processed. Ask the user to confirm or correct the grouping and to remove anything that is not study material. This is a `waiting_user` point. Continue only with the confirmed list `{confirmed_inventory}`.
+Show the real inventory from Step 1b as a table: lecture, recordings, documents, photos, video files that will not be processed, and whether the lecture already has a note from an earlier run. In `new lectures only` mode, lectures that already have a note are shown but not processed again. Ask the user to confirm or correct the grouping and to remove anything that is not study material. This is a `waiting_user` point. Continue only with the confirmed list `{confirmed_inventory}`.
 
 ## Step 3: Transcribe recordings
 
@@ -96,9 +106,9 @@ For each lecture that has at least one real source from Steps 3 to 5:
 
 `delegate --target document-agent --instruction 'Write study notes for the lecture {lecture_name} of the course {course_name} using only the material below. Use these sections in order: Summary (5 sentences max), Key topics, Definitions, Formulas, Worked examples, Lecturer emphasis (sentences where the lecturer says something is important, will be in the exam, or should be remembered, each with its recording time), and Conflicts and gaps (places where the recording, slides, and board disagree or where a source is missing). After every point, add its source in brackets: Recording with time, Slides with page, or Board photo with file name. Do not add facts that are not in the material. Return the notes as Markdown text in the result and do not save any file. Material: transcript {transcript}; slide outlines {slide_outline}; board text {board_text}.'`
 
-Keep each real result as `{lecture_note}`. Then, once for the whole selection:
+Keep each real result as `{lecture_note}`. Then, once for the whole course, build the revision sheet from the new notes plus, in `new lectures only` mode, the earlier notes in `{existing_notes}`. In `rebuild all` mode, use the word none for `{existing_notes}` in this step so no lecture is counted twice:
 
-`delegate --target document-agent --instruction 'Write one exam revision sheet for the course {course_name} using only the lecture notes below. Use these sections in order: Top topics ranked by how often they appear and how strongly the lecturer stressed them, Must-know definitions and formulas, Lecturer emphasis across lectures, 10 practice questions with short answers, and a one-page quick-check list. Every item must keep the source brackets from the notes and name its lecture. Do not add facts that are not in the notes. Return the sheet as Markdown text in the result and do not save any file. Lecture notes: {lecture_notes}.'`
+`delegate --target document-agent --instruction 'Write one exam revision sheet for the course {course_name} using only the lecture notes below. Use these sections in order: Top topics ranked by how often they appear and how strongly the lecturer stressed them, Must-know definitions and formulas, Lecturer emphasis across lectures, 10 practice questions with short answers, and a one-page quick-check list. Every item must keep the source brackets from the notes and name its lecture. Do not add facts that are not in the notes. Return the sheet as Markdown text in the result and do not save any file. New lecture notes: {lecture_notes}. Earlier lecture notes: {existing_notes}.'`
 
 Keep the real result as `{revision_sheet}`.
 
@@ -109,7 +119,7 @@ Show the user a short preview: the list of notes that will be saved, the first l
 - `{lecture_name} - notes.md` for each lecture
 - `{course_name} - revision sheet.md`
 
-Ask the user to confirm the folder and file names. This is a `waiting_user` point. If the user declines, do not save anything, show the full text in the conversation instead, and finish as `cancelled`.
+Earlier note files are never overwritten. If a planned name already exists, say that the new file will be saved with a number added to its name. Ask the user to confirm the folder and file names. This is a `waiting_user` point. If the user declines, do not save anything, show the full text in the conversation instead, and finish as `cancelled`.
 
 ## Step 8: Save the notes (only after confirmation)
 

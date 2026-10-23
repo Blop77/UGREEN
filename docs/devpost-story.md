@@ -14,6 +14,7 @@ A UGREEN AI NAS already stores all of this in one place and can transcribe, read
 4. Writes **one note per lecture** with key topics, definitions, formulas, worked examples, *Lecturer emphasis* and *Conflicts and gaps*.
 5. Writes **one exam revision sheet** with ranked topics, 10 practice questions and a quick-check list.
 6. Saves everything to a `Revision` folder, but only after the student confirms.
+7. On later runs, finds the earlier notes and processes only the new lectures, so it keeps up with the semester.
 
 Every point carries its source, such as `[Rec 14:32]`, `[Slides p.7]` or `[Board IMG_2041]`, so nothing has to be taken on trust.
 

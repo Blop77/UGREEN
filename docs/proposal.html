@@ -25,10 +25,10 @@ code{font-family:"DejaVu Sans Mono",monospace;font-size:8.2pt;background:#f3f5fa
 <p>College students who record lectures and photograph the board. Before exams this material is scattered across audio, PDFs and images. Replaying hours of recordings and cross-checking slides takes days, and generic summaries miss what the lecturer actually stressed.</p>
 
 <h2><span>3.</span> Solution</h2>
-<p>Uliya gathers all three source types, converts each into text on the NAS, and merges them into structured notes: topics, definitions, formulas, examples, lecturer-emphasis moments, and conflicts between sources. A revision sheet ranks topics and adds ten practice questions.</p>
+<p>Uliya gathers all three source types, converts each into text on the NAS, and merges them into structured notes: topics, definitions, formulas, examples, lecturer-emphasis moments, and conflicts between sources. A revision sheet ranks topics and adds practice questions.</p>
 
 <h2><span>4.</span> Main user flow</h2>
-<p>“Make revision notes for my Operating Systems course.” → Uliya confirms folder and lectures → user approves a grouped file inventory → transcription, OCR and slide outlines → note preview → save to a <code>Revision</code> folder after confirmation → report of saved files and missing sources.</p>
+<p>“Make revision notes for my Operating Systems course.” → Uliya confirms folder and lectures → user approves a grouped file inventory → transcription, OCR and slide outlines → note preview → save to a <code>Revision</code> folder after confirmation → report of saved files and missing sources. Later runs process only new lectures.</p>
 
 <h2><span>5.</span> Differentiation</h2>
 <p>Common AI tools summarize one file at a time and need cloud uploads. This Skill fuses three formats per lecture, cites the exact recording time, slide page or photo for every point, detects what the lecturer emphasized, and flags where slides and speech disagree. Data never leaves the NAS.</p>
@@ -42,7 +42,7 @@ code{font-family:"DejaVu Sans Mono",monospace;font-size:8.2pt;background:#f3f5fa
 <tr><td>8 Create folder, save notes</td><td><code>ug-filesystem</code> mkdir, <code>ug-knowledge</code> save-text</td><td>file-agent, knowledge-agent</td></tr></table>
 
 <h2><span>7.</span> Technical approach</h2>
-<p>A Markdown orchestration Skill: the parent only issues <code>delegate</code> commands to four registered experts in a fixed order, passing only real upstream results. Inputs: course folder, scope, recording language, output folder. Originals are read-only; writes happen only after user confirmation and platform approval and never overwrite. Models: the NAS's built-in transcription, OCR and document AI; no external services or keys. All five delegation states and empty or partial results are handled.</p>
+<p>A Markdown orchestration Skill: the parent only issues <code>delegate</code> commands to four registered experts in a fixed order, passing only real upstream results. Inputs: course folder, scope, recording language, output folder. Originals are read-only; writes happen only after user confirmation and platform approval and never overwrite. Models: built-in NAS transcription, OCR and document AI; no external services or keys. All five delegation states and empty or partial results are handled.</p>
 
 <h2><span>8.</span> Progress</h2>
 <p><b>Built:</b> the complete Skill package (SKILL.md, user guide, disclosures), passing the official uliya-skill-kit 0.7.3 static check with zero errors and warnings. <b>Not built:</b> device-tuned wording. <b>Needs NAS testing:</b> 60–90 minute recordings, handwritten board OCR, document-agent limits with long transcripts, and approval prompts while saving.</p>
@@ -51,7 +51,7 @@ code{font-family:"DejaVu Sans Mono",monospace;font-size:8.2pt;background:#f3f5fa
 <p><b>Core 1:</b> one lecture with a recording, slides and two board photos produces one note with a valid source for every point. <b>Core 2:</b> a four-lecture unit produces a ranked revision sheet with ten practice questions; a rerun creates new files without overwriting. <b>Edge:</b> a lecture with only a video and an unreadable photo is reported as partial, nothing is invented, and nothing is saved without confirmation.</p>
 
 <h2><span>10.</span> Limits, risks, dependencies</h2>
-<p>Video is listed but not transcribed; maximum twelve lectures per run. Noisy audio and messy handwriting lower quality and are reported as warnings. Very long transcripts may need per-lecture processing. The Skill depends entirely on the built-in NAS experts.</p>
+<p>Video is listed but not transcribed; maximum twelve lectures per run. Noisy audio and messy handwriting lower quality and are reported as warnings. Very long transcripts may need splitting. It depends entirely on built-in NAS experts.</p>
 </div>
 
 <div class="note"><b>Third-party components and licenses:</b> none. The Skill contains only Markdown; all work is done by UGREEN AI NAS experts. <b>AI tools used:</b> Claude Code (Anthropic) to help draft the Skill and this proposal; UGOS Skill Creation Tool (uliya-skill-kit 0.7.3) for capability checks and static checking.</div>
