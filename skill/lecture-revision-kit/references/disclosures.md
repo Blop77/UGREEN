@@ -23,7 +23,7 @@ There are no external services, network calls, packages, or downloads.
 
 ## Third-party components and open source libraries
 
-None. This Skill is made only of Markdown instructions. It contains no code, libraries, scripts, binaries, models, or downloads. All work is done by the UGREEN AI NAS experts and capabilities listed in SKILL.md.
+None. There are no third-party components or open source libraries, so there are no third-party sources or licenses to list. This Skill is made only of Markdown instructions. It contains no code, libraries, scripts, binaries, models, or downloads. All work is done by the UGREEN AI NAS experts and capabilities listed in SKILL.md.
 
 ## Principal functionality developed for this Hackathon
 
