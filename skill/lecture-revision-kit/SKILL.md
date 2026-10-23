@@ -14,7 +14,7 @@ Every point in the output names its source (Recording with time, Slides with pag
 
 Supported scope: one course folder per run, up to 12 lectures per run. Audio recordings, slide or handout documents, and photos are supported sources. Video files are listed but not transcribed. Users with video lectures are told to export the audio track first.
 
-For the full user guide and examples, read [references/user-guide.md](references/user-guide.md). For third-party, license, and AI tool disclosures, read [references/disclosures.md](references/disclosures.md).
+For the README (user guide, examples, and how to remove the Skill), read [references/README.md](references/README.md). For dependencies, third-party, license, and AI tool disclosures, read [references/disclosures.md](references/disclosures.md).
 
 # Required input
 

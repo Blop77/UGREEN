@@ -31,8 +31,8 @@ the earlier notes and processes only new lectures.
 ```
 skill/lecture-revision-kit/   the Skill (this is what gets submitted)
   SKILL.md                    entry point: goal, inputs, workflow, failure handling
-  references/user-guide.md    user guide
-  references/disclosures.md   third-party, license and AI tool disclosures
+  references/README.md        README / user guide
+  references/disclosures.md   dependencies, third-party, license and AI tool disclosures
 assets/                       Devpost thumbnail and gallery images (1200x800)
 docs/                         Round 1 proposal, Devpost story, Round 2 test plan and demo script
 testkit/                      sample course for Round 2 testing (not part of the Skill)

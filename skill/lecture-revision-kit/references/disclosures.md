@@ -1,5 +1,26 @@
 # Disclosures
 
+## Package contents
+
+- `SKILL.md`: the Skill entry point. Its frontmatter (`name`, `description`) is the manifest, and its body is the full source of the workflow.
+- `references/README.md`: user guide.
+- `references/disclosures.md`: this file.
+
+No configuration template is needed: the Skill has no settings, credentials, or keys.
+
+## Dependencies
+
+The Skill depends only on capabilities built into UGREEN AI NAS, delegated through Uliya:
+
+| Capability | Expert | Used for |
+|---|---|---|
+| `ug-filesystem` | `file-agent` | Finding course files and earlier notes, creating the output folder |
+| `ug-knowledge` | `knowledge-agent` | Transcribing recordings, saving notes |
+| `ug-photo` | `photo-agent` | Reading text from whiteboard photos |
+| `ug-document` | `document-agent` | Outlining slides, condensing long transcripts, writing notes and the revision sheet |
+
+There are no external services, network calls, packages, or downloads.
+
 ## Third-party components and open source libraries
 
 None. This Skill is made only of Markdown instructions. It contains no code, libraries, scripts, binaries, models, or downloads. All work is done by the UGREEN AI NAS experts and capabilities listed in SKILL.md.
