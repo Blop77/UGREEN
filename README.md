@@ -9,6 +9,9 @@ slide page, or photo file name).
 
 Entry for the **UGREEN Hackathon 2026 on AI NAS**, track *Automate Your Workflow*.
 
+**Interactive demo:** https://claude.ai/artifact/HQG99SPCGsTxPYofMaPbP5 (a scripted walkthrough on the sample
+course; the results are illustrative, not real NAS output). Source: `demo/index.html`.
+
 ## How it works
 
 | Step | Expert | Capability |
@@ -34,6 +37,7 @@ assets/                       Devpost thumbnail and gallery images (1200x800)
 docs/                         Round 1 proposal, Devpost story, Round 2 test plan and demo script
 testkit/                      sample course for Round 2 testing (not part of the Skill)
 tools/lint_skill.py           extra check: every {value} in SKILL.md is defined and used
+demo/index.html               interactive walkthrough page (single file, no build step)
 Makefile                      check and package helpers
 ```
 

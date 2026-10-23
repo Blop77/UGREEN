@@ -1,0 +1,544 @@
+<title>Lecture Revision Kit Demo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: study desk — NAS file shelf on the left, Uliya conversation on the right, step rail on top. */
+:root {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --ink: #18223a;
+  --muted: #5a6680;
+  --line: #dde2ec;
+  --accent: #c98a0c;          /* highlighter amber */
+  --accent-ink: #7a5200;
+  --accent-wash: #fdf1d6;
+  --navy: #1f3a6e;
+  --navy-wash: #e7edf8;
+  --ok: #1e7a4e;  --ok-wash: #e1f3ea;
+  --warn: #9a5b00; --warn-wash: #fdf0dc;
+  --bad: #b23a2a; --bad-wash: #fbe5e1;
+  --user: #1f3a6e; --user-ink: #ffffff;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1526; --panel: #152038; --ink: #e8edf7; --muted: #9aa7c2; --line: #263453;
+    --accent: #f2b544; --accent-ink: #f7cd7c; --accent-wash: #3a2d12;
+    --navy: #9db8ec; --navy-wash: #1c2b4b;
+    --ok: #6fd3a0; --ok-wash: #12301f; --warn: #f2b544; --warn-wash: #33270f; --bad: #f08a7a; --bad-wash: #3a1a16;
+    --user: #2c4c8a; --user-ink: #ffffff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1526; --panel: #152038; --ink: #e8edf7; --muted: #9aa7c2; --line: #263453;
+  --accent: #f2b544; --accent-ink: #f7cd7c; --accent-wash: #3a2d12;
+  --navy: #9db8ec; --navy-wash: #1c2b4b;
+  --ok: #6fd3a0; --ok-wash: #12301f; --warn: #f2b544; --warn-wash: #33270f; --bad: #f08a7a; --bad-wash: #3a1a16;
+  --user: #2c4c8a; --user-ink: #ffffff;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 15px/1.5 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 32px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+h1 { font: 800 clamp(24px, 4vw, 34px)/1.05 var(--display); margin: 0; letter-spacing: -0.02em; text-wrap: balance; }
+h1 span { color: var(--accent); }
+.sub { color: var(--muted); margin: 4px 0 0; }
+.btn {
+  font: 600 14px var(--body); border-radius: 8px; padding: 8px 14px; cursor: pointer;
+  border: 1.5px solid var(--line); background: var(--panel); color: var(--ink);
+}
+.btn:hover { border-color: var(--navy); }
+.btn:focus-visible, .chip:focus-visible, .file:focus-visible, .tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.notice {
+  display: flex; gap: 10px; align-items: flex-start; background: var(--accent-wash); color: var(--ink);
+  border: 1px solid var(--accent); border-radius: 10px; padding: 10px 14px; font-size: 14px;
+}
+.notice b { color: var(--accent-ink); }
+.rail { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.rail li {
+  font: 500 12.5px var(--mono); letter-spacing: 0.02em; padding: 5px 10px; border-radius: 999px;
+  background: var(--panel); border: 1px solid var(--line); color: var(--muted);
+}
+.rail li.done { color: var(--ok); border-color: var(--ok); }
+.rail li.now { color: var(--accent-ink); border-color: var(--accent); background: var(--accent-wash); font-weight: 600; }
+.grid { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 820px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; min-width: 0; }
+.files { padding: 14px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); }
+@media (max-width: 820px) { .files { position: static; } }
+.files h2, .label { font: 600 11.5px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0; }
+.crumb { font: 600 15px var(--display); }
+.flist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.file {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; border: 0; background: none;
+  color: var(--ink); font: 13.5px var(--body); padding: 5px 6px; border-radius: 6px; cursor: default;
+}
+.file.open { cursor: pointer; }
+.file.open:hover { background: var(--navy-wash); }
+.file .name { min-width: 0; overflow-wrap: anywhere; }
+.ext {
+  flex: none; width: 36px; text-align: center; font: 600 10px var(--mono); padding: 2px 0; border-radius: 4px;
+  background: var(--navy-wash); color: var(--navy);
+}
+.ext.md { background: var(--ok-wash); color: var(--ok); }
+.ext.vid { background: var(--bad-wash); color: var(--bad); }
+.new { font: 600 10px var(--mono); color: var(--accent-ink); background: var(--accent-wash); padding: 1px 6px; border-radius: 4px; margin-left: auto; flex: none; }
+.folder { font: 600 13px var(--body); color: var(--muted); padding: 6px 6px 2px; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+.chat { display: flex; flex-direction: column; }
+.log { padding: 18px; display: flex; flex-direction: column; gap: 12px; min-height: 420px; }
+.msg { display: flex; flex-direction: column; gap: 4px; max-width: 100%; }
+.who { font: 600 11.5px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.bubble { border-radius: 12px; padding: 10px 14px; max-width: 760px; min-width: 0; overflow-wrap: anywhere; }
+.msg.uliya .bubble { background: var(--navy-wash); }
+.msg.user { align-items: flex-end; }
+.msg.user .bubble { background: var(--user); color: var(--user-ink); }
+.bubble p { margin: 0 0 6px; } .bubble p:last-child { margin: 0; }
+.agents { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; max-width: 760px; }
+.agents .row {
+  display: grid; grid-template-columns: 128px minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 7px 12px; font: 13px var(--mono); border-top: 1px solid var(--line);
+}
+.agents .row:first-child { border-top: 0; }
+@media (max-width: 520px) { .agents .row { grid-template-columns: minmax(0, 1fr) auto; } .agents .row .ag { grid-column: 1 / -1; } }
+.ag { color: var(--navy); font-weight: 500; }
+.task { min-width: 0; overflow-wrap: anywhere; color: var(--ink); }
+.pill { font: 600 11px var(--mono); padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.pill.run { background: var(--navy-wash); color: var(--navy); }
+.pill.ok { background: var(--ok-wash); color: var(--ok); }
+.pill.empty, .pill.wait { background: var(--warn-wash); color: var(--warn); }
+.pill.bad { background: var(--bad-wash); color: var(--bad); }
+.table-wrap { overflow-x: auto; max-width: 760px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 11.5px var(--mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+.skip { color: var(--muted); }
+.callout { border-radius: 10px; padding: 10px 14px; max-width: 760px; font-size: 14px; }
+.callout.warn { background: var(--warn-wash); border: 1px solid var(--warn); }
+.callout.bad { background: var(--bad-wash); border: 1px solid var(--bad); }
+.callout.ok { background: var(--ok-wash); border: 1px solid var(--ok); }
+.doc { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; max-width: 760px; overflow: hidden; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 8px 0; border-bottom: 1px solid var(--line); background: var(--bg); }
+.tab { border: 0; background: none; font: 600 13px var(--body); color: var(--muted); padding: 7px 12px; border-radius: 8px 8px 0 0; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--panel); color: var(--ink); }
+.note { padding: 14px 18px 18px; font-size: 14.5px; }
+.note h3 { font: 800 20px var(--display); margin: 0 0 2px; }
+.note h4 { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-ink); margin: 14px 0 4px; }
+.note ul, .note ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.note .srcs { color: var(--muted); font-size: 12.5px; }
+.src { font: 500 11.5px var(--mono); color: var(--accent-ink); background: var(--accent-wash); padding: 1px 6px; border-radius: 4px; white-space: nowrap; }
+.hl { background: var(--accent-wash); border-radius: 6px; padding: 3px 8px; margin-left: -8px; }
+.formula { font-family: var(--mono); font-size: 13.5px; }
+.composer { border-top: 1px solid var(--line); padding: 12px 18px 16px; display: flex; flex-direction: column; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: 600 14px var(--body); border-radius: 999px; padding: 8px 16px; cursor: pointer;
+  border: 1.5px solid var(--navy); background: var(--panel); color: var(--navy);
+}
+.chip.primary { background: var(--navy); color: var(--panel); }
+.chip:disabled { opacity: 0.45; cursor: progress; }
+.typing { color: var(--muted); font-size: 13px; }
+[hidden] { display: none !important; }
+.overlay { position: fixed; inset: 0; background: rgba(8, 12, 24, 0.55); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
+.overlay .doc { width: min(780px, 100%); max-height: 86vh; overflow: auto; }
+.overlay .bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); font: 600 13px var(--mono); }
+footer { color: var(--muted); font-size: 13px; }
+footer code { font-family: var(--mono); font-size: 12.5px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Lecture <span>Revision Kit</span></h1>
+      <p class="sub">A Uliya Skill for UGREEN AI NAS · interactive walkthrough</p>
+    </div>
+    <button class="btn" id="restart" type="button">Start over</button>
+  </header>
+
+  <div class="notice" role="note">
+    <div><b>Simulated demo.</b> This page replays the Skill's workflow on the sample course from the project's test kit. The agent results and notes are illustrative, written from the sample slides and recording scripts, and are not real NAS output. The real Skill runs inside Uliya on a UGREEN AI NAS.</div>
+  </div>
+
+  <ol class="rail" id="rail" aria-label="Workflow steps"></ol>
+
+  <div class="grid">
+    <aside class="panel files" aria-label="NAS files">
+      <h2>NAS · Courses</h2>
+      <div class="crumb">Operating Systems</div>
+      <ul class="flist" id="files"></ul>
+      <p class="hint">Saved notes appear here. Click a green MD file to open it.</p>
+    </aside>
+
+    <section class="panel chat" aria-label="Conversation with Uliya">
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="composer">
+        <div class="label" id="prompt-label">Your reply</div>
+        <div class="chips" id="chips"></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>Skill source, test kit and docs: <code>skill/lecture-revision-kit</code>, <code>testkit/</code>, <code>docs/</code> in the project repository. UGREEN Hackathon 2026 on AI NAS.</footer>
+</div>
+
+<div class="overlay" id="viewer" hidden>
+  <div class="doc" role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+    <div class="bar"><span id="viewer-title"></span><button class="btn" id="viewer-close" type="button">Close</button></div>
+    <div id="viewer-body"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, reduce ? 0 : ms));
+  const $ = (id) => document.getElementById(id);
+  const S = (t) => `<span class="src">[${t}]</span>`;
+
+  const STEPS = ["Find", "Confirm", "Read sources", "Write notes", "Preview", "Approve & save", "Next week"];
+
+  const BASE_FILES = [
+    { name: "Course outline.pdf", ext: "PDF" },
+    { name: "Lecture 01 - board.jpg", ext: "IMG" },
+    { name: "Lecture 01 - recording.m4a", ext: "AUD" },
+    { name: "Lecture 01 - slides.pdf", ext: "PDF" },
+    { name: "Lecture 02 - board.jpg", ext: "IMG" },
+    { name: "Lecture 02 - recording.m4a", ext: "AUD" },
+    { name: "Lecture 02 - slides.pdf", ext: "PDF" },
+    { name: "Lecture 03 - board.jpg", ext: "IMG" },
+    { name: "Lecture 03 - recording.mp4", ext: "VID" },
+  ];
+
+  const NOTES = {
+    "Lecture 01": `<h3>Lecture 01 – Processes</h3>
+      <div class="srcs">Sources: Lecture 01 - recording.m4a · Lecture 01 - slides.pdf · Lecture 01 - board.jpg</div>
+      <h4>Summary</h4><p>A process is a program in execution with its own address space, registers and program counter. Processes move between five states. The PCB stores each process's state, and a context switch swaps one PCB for another.</p>
+      <h4>Key topics</h4><ul>
+        <li>Process vs program ${S("Slides p.2")} ${S("Rec 00:08")}</li>
+        <li>Process states: new, ready, running, waiting, terminated ${S("Slides p.3")} ${S("Board Lecture 01 - board.jpg")}</li>
+        <li>After waiting, a process returns to ready, not straight to running ${S("Rec 00:31")} ${S("Board Lecture 01 - board.jpg")}</li></ul>
+      <h4>Definitions</h4><ul>
+        <li><b>PCB:</b> stores state, program counter, registers and open files ${S("Slides p.4")} ${S("Rec 00:45")}</li></ul>
+      <h4>Lecturer emphasis</h4><ul>
+        <li class="hl">“A context switch means saving the PCB of one process and loading the PCB of another. This is very important, and I will ask it in the exam.” ${S("Rec 00:58")}</li></ul>
+      <h4>Conflicts and gaps</h4><ul><li>None found. All three sources agree.</li></ul>`,
+    "Lecture 02": `<h3>Lecture 02 – Memory Management</h3>
+      <div class="srcs">Sources: Lecture 02 - recording.m4a · Lecture 02 - slides.pdf · Lecture 02 - board.jpg</div>
+      <h4>Summary</h4><p>Paging splits physical memory into frames and logical memory into pages of the same size. A TLB caches page-table entries to speed up translation. Effective access time depends on the TLB hit ratio. Segmentation was introduced for comparison.</p>
+      <h4>Key topics</h4><ul>
+        <li>Paging avoids external fragmentation ${S("Slides p.2")} ${S("Rec 00:12")}</li>
+        <li>Translation Lookaside Buffer (TLB) ${S("Slides p.3")} ${S("Rec 00:41")}</li>
+        <li>Segmentation: variable-size logical units (code, data, stack) ${S("Rec 01:20")}</li></ul>
+      <h4>Definitions</h4><ul>
+        <li><b>TLB hit ratio h</b> = hits / total lookups ${S("Slides p.3")}</li></ul>
+      <h4>Formulas</h4><ul>
+        <li class="formula">EAT = h(t_TLB + t_mem) + (1 − h)(t_TLB + 2·t_mem) ${S("Slides p.4")} ${S("Board Lecture 02 - board.jpg")}</li></ul>
+      <h4>Worked examples</h4><ul>
+        <li>h = 0.9, t_TLB = 10 ns, t_mem = 100 ns → EAT = 120 ns ${S("Slides p.4")} ${S("Rec 01:02")}</li></ul>
+      <h4>Lecturer emphasis</h4><ul>
+        <li class="hl">“Paging versus segmentation will definitely be in the exam, so make sure you can compare them.” ${S("Rec 01:12")}</li>
+        <li class="hl">“IMPORTANT: paging vs segmentation!” ${S("Board Lecture 02 - board.jpg")}</li></ul>
+      <h4>Conflicts and gaps</h4><ul>
+        <li><b>Page size disagrees:</b> the slides say 4 KB ${S("Slides p.2")}, but the lecture example used 8 KB ${S("Rec 00:28")}. Check with your lecturer.</li></ul>`,
+    "Lecture 04": `<h3>Lecture 04 – CPU Scheduling</h3>
+      <div class="srcs">Sources: Lecture 04 - slides.pdf</div>
+      <h4>Summary</h4><p>Scheduling aims to keep the CPU busy and reduce waiting. Three algorithms were listed: FCFS, SJF and Round Robin.</p>
+      <h4>Key topics</h4><ul>
+        <li>Goals: maximize CPU use and throughput, minimize waiting and response time ${S("Slides p.2")}</li>
+        <li>FCFS, SJF, Round Robin with a fixed time quantum ${S("Slides p.3")}</li></ul>
+      <h4>Lecturer emphasis</h4><ul><li>None available: there is no recording for this lecture.</li></ul>
+      <h4>Conflicts and gaps</h4><ul><li><b>Partial lecture:</b> no recording and no board photo were found, so these notes come from the slides only.</li></ul>`,
+  };
+
+  const sheet = (withL4) => `<h3>Operating Systems – Revision Sheet</h3>
+    <div class="srcs">Built from: Lecture 01, Lecture 02${withL4 ? ", Lecture 04" : ""} notes</div>
+    <h4>Top topics</h4><ol>
+      <li class="hl">Paging vs segmentation — stressed twice, in speech and on the board ${S("L02 Rec 01:12")} ${S("L02 Board")}</li>
+      <li class="hl">Context switch = save PCB + load PCB — “I will ask it in the exam” ${S("L01 Rec 00:58")}</li>
+      <li>TLB and effective access time ${S("L02 Slides p.3–4")}</li>
+      <li>Process states and transitions ${S("L01 Slides p.3")}</li>
+      ${withL4 ? `<li>Scheduling algorithms: FCFS, SJF, Round Robin ${S("L04 Slides p.3")}</li>` : ""}</ol>
+    <h4>Must-know formula</h4><ul><li class="formula">EAT = h(t_TLB + t_mem) + (1 − h)(t_TLB + 2·t_mem) ${S("L02 Slides p.4")}</li></ul>
+    <h4>Practice questions (4 of 10 shown)</h4><ol>
+      <li>Compare paging and segmentation. <i>Answer: fixed-size pages vs variable-size logical units</i> ${S("L02 Rec 01:20")}</li>
+      <li>What happens during a context switch? <i>Save one PCB, load another</i> ${S("L01 Rec 00:58")}</li>
+      <li>Compute EAT for h = 0.9, t_TLB = 10 ns, t_mem = 100 ns. <i>120 ns</i> ${S("L02 Slides p.4")}</li>
+      <li>After waiting, which state does a process enter? <i>Ready</i> ${S("L01 Rec 00:31")}</li></ol>
+    <h4>Check before the exam</h4><ul><li>Page size: slides say 4 KB, lecture said 8 KB ${S("L02 Slides p.2")} ${S("L02 Rec 00:28")}</li></ul>`;
+
+  let files, saved, stepNow, run;
+
+  function renderRail() {
+    $("rail").innerHTML = STEPS.map((s, i) =>
+      `<li class="${i < stepNow ? "done" : i === stepNow ? "now" : ""}">${i + 1}. ${s}</li>`).join("");
+  }
+  function setStep(i) { stepNow = i; renderRail(); }
+
+  function renderFiles() {
+    const row = (f) => {
+      const cls = f.ext === "MD" ? "md" : f.ext === "VID" ? "vid" : "";
+      const open = f.ext === "MD";
+      return `<li><button type="button" class="file${open ? " open" : ""}" ${open ? `data-open="${f.name}"` : "tabindex=\"-1\""}>
+        <span class="ext ${cls}">${f.ext}</span><span class="name">${f.name}</span>${f.isNew ? '<span class="new">NEW</span>' : ""}</button></li>`;
+    };
+    let html = files.map(row).join("");
+    if (saved.length) html += `<li class="folder">Revision/</li>` + saved.map(row).join("");
+    $("files").innerHTML = html;
+  }
+
+  const log = $("log");
+  function add(html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    const el = div.firstElementChild;
+    log.appendChild(el);
+    el.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    return el;
+  }
+  const say = (html) => add(`<div class="msg uliya"><div class="who">Uliya</div><div class="bubble">${html}</div></div>`);
+  const me = (text) => add(`<div class="msg user"><div class="who">You</div><div class="bubble">${text}</div></div>`);
+
+  async function agents(rows) {
+    const box = add(`<div class="agents" role="list"></div>`);
+    for (const [ag, task, status, note] of rows) {
+      const r = document.createElement("div");
+      r.className = "row"; r.setAttribute("role", "listitem");
+      r.innerHTML = `<span class="ag">${ag}</span><span class="task">${task}</span><span class="pill run">working</span>`;
+      box.appendChild(r);
+      r.scrollIntoView({ block: "nearest" });
+      await sleep(520);
+      const cls = { completed: "ok", empty: "empty", failed: "bad", waiting_approval: "wait", skipped: "empty" }[status];
+      r.querySelector(".pill").className = `pill ${cls}`;
+      r.querySelector(".pill").textContent = note ? `${status} · ${note}` : status;
+    }
+    await sleep(200);
+  }
+
+  function choices(list, label = "Your reply") {
+    $("prompt-label").textContent = label;
+    const box = $("chips");
+    box.innerHTML = "";
+    return new Promise((resolve) => {
+      list.forEach(([text, value, primary]) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "chip" + (primary ? " primary" : ""); b.textContent = text;
+        b.addEventListener("click", () => { box.innerHTML = ""; $("prompt-label").textContent = "Uliya is working…"; resolve({ text, value }); });
+        box.appendChild(b);
+      });
+    });
+  }
+
+  function preview(tabs) {
+    const id = "p" + Math.random().toString(36).slice(2, 7);
+    const el = add(`<div class="doc"><div class="tabs" role="tablist">${tabs.map(([t], i) =>
+      `<button type="button" class="tab" role="tab" aria-selected="${i === 0}" data-i="${i}">${t}</button>`).join("")}</div>
+      <div class="note" id="${id}">${tabs[0][1]}</div></div>`);
+    el.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => {
+      el.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-selected", "false"));
+      t.setAttribute("aria-selected", "true");
+      el.querySelector(".note").innerHTML = tabs[+t.dataset.i][1];
+    }));
+  }
+
+  // One conversation run. `token` stops an old run after "Start over".
+  async function main(token) {
+    const live = () => token === run;
+    say(`<p>Hi! I can turn a course's lecture recordings, slides and whiteboard photos into notes and a revision sheet. Try the request below.</p>`);
+    setStep(0);
+    await choices([["Make revision notes for my Operating Systems course.", 1, true]], "Send to Uliya");
+    if (!live()) return;
+    me("Make revision notes for my Operating Systems course.");
+    await sleep(300);
+    say(`<p>I'll use <b>Lecture Revision Kit</b>. First I'll look for the course folder.</p>`);
+    await agents([["file-agent", "Find folders named “Operating Systems”", "completed", "1 match"]]);
+    if (!live()) return;
+    say(`<p>Found <b>Courses › Operating Systems</b>. Which lectures should I include, and which languages?</p>`);
+    await choices([["Whole course · recordings in English · notes in English", 1, true]]);
+    if (!live()) return;
+    me("Whole course · recordings in English · notes in English");
+    await agents([
+      ["file-agent", "List recordings, documents and photos (Step 1b)", "completed", "9 files"],
+      ["file-agent", "Look for notes from earlier runs in Revision/ (Step 1c)", "empty", "first run"],
+    ]);
+    if (!live()) return;
+    setStep(1);
+    say(`<p>Here's what I found, grouped by lecture. Nothing has been processed yet.</p>`);
+    add(`<div class="table-wrap"><table><thead><tr><th>Lecture</th><th>Recording</th><th>Slides</th><th>Board photo</th><th>Not processed</th></tr></thead><tbody>
+      <tr><td>Lecture 01</td><td>recording.m4a</td><td>slides.pdf</td><td>board.jpg</td><td class="skip">—</td></tr>
+      <tr><td>Lecture 02</td><td>recording.m4a</td><td>slides.pdf</td><td>board.jpg</td><td class="skip">—</td></tr>
+      <tr><td>Lecture 03</td><td class="skip">—</td><td class="skip">—</td><td>board.jpg</td><td>recording.mp4 (video)</td></tr>
+      <tr><td>Unmatched</td><td class="skip">—</td><td>Course outline.pdf</td><td class="skip">—</td><td class="skip">—</td></tr>
+    </tbody></table></div>`);
+    say(`<p>The video can't be transcribed, so export its audio if you want it included. <b>Course outline.pdf</b> has no lecture number. Should I go ahead?</p>`);
+    await choices([["Looks right. Leave out the course outline.", 1, true]]);
+    if (!live()) return;
+    me("Looks right. Leave out the course outline.");
+    setStep(2);
+    await agents([
+      ["knowledge-agent", "Transcribe Lecture 01 - recording.m4a", "completed", "1 min 34 s"],
+      ["knowledge-agent", "Transcribe Lecture 02 - recording.m4a", "completed", "1 min 41 s"],
+      ["photo-agent", "Read text on Lecture 01 - board.jpg", "completed", "3 lines"],
+      ["photo-agent", "Read text on Lecture 02 - board.jpg", "completed", "3 lines"],
+      ["photo-agent", "Read text on Lecture 03 - board.jpg", "empty", "no readable text"],
+      ["document-agent", "Outline Lecture 01 - slides.pdf", "completed", "4 pages"],
+      ["document-agent", "Outline Lecture 02 - slides.pdf", "completed", "4 pages"],
+    ]);
+    if (!live()) return;
+    setStep(3);
+    await agents([
+      ["document-agent", "Write notes for Lecture 01", "completed"],
+      ["document-agent", "Write notes for Lecture 02", "completed"],
+      ["—", "Lecture 03: no usable material", "skipped"],
+      ["document-agent", "Write the revision sheet", "completed"],
+    ]);
+    if (!live()) return;
+    setStep(4);
+    say(`<p>Here's a preview. Every point shows where it came from. In Lecture 02 I found a conflict between the slides and the recording.</p>`);
+    preview([["Lecture 02 notes", NOTES["Lecture 02"]], ["Lecture 01 notes", NOTES["Lecture 01"]], ["Revision sheet", sheet(false)]]);
+    add(`<div class="callout warn"><b>Lecture 03 has no usable material.</b> The video was not processed and the board photo had no readable text, so I didn't write a note for it rather than guess.</div>`);
+    const first = ["Lecture 01 - notes.md", "Lecture 02 - notes.md", "Operating Systems - revision sheet.md"];
+    if (!(await saveFlow(first, false, live))) return;
+
+    // Next week: repeat use
+    setStep(6);
+    say(`<p>A week later, a new lecture is added to the course folder.</p>`);
+    await choices([["Add Lecture 04 slides to the folder", 1, true]], "Next week");
+    if (!live()) return;
+    files.push({ name: "Lecture 04 - slides.pdf", ext: "PDF", isNew: true });
+    renderFiles();
+    await sleep(250);
+    await choices([["Update my Operating Systems revision notes.", 1, true]], "Send to Uliya");
+    if (!live()) return;
+    me("Update my Operating Systems revision notes.");
+    await agents([
+      ["file-agent", "List recordings, documents and photos (Step 1b)", "completed", "10 files"],
+      ["file-agent", "Look for notes from earlier runs in Revision/ (Step 1c)", "completed", "2 notes found"],
+    ]);
+    if (!live()) return;
+    say(`<p>I found your earlier notes for <b>Lecture 01</b> and <b>Lecture 02</b>. Should I keep them and only process lectures without notes, or rebuild everything?</p>`);
+    const mode = await choices([["New lectures only", "new", true], ["Rebuild all", "all"]]);
+    if (!live()) return;
+    me(mode.text);
+    if (mode.value === "new") {
+      say(`<p>Keeping the Lecture 01 and 02 notes. Processing Lectures 03 and 04 only.</p>`);
+      await agents([
+        ["photo-agent", "Read text on Lecture 03 - board.jpg", "empty", "no readable text"],
+        ["document-agent", "Outline Lecture 04 - slides.pdf", "completed", "3 pages"],
+        ["document-agent", "Write notes for Lecture 04", "completed"],
+        ["document-agent", "Write the revision sheet from new + earlier notes", "completed"],
+      ]);
+    } else {
+      say(`<p>Processing every lecture again. Your earlier files will be kept, and the new ones get a number added to the name.</p>`);
+      await agents([
+        ["knowledge-agent", "Transcribe Lecture 01 and Lecture 02 recordings", "completed", "2 files"],
+        ["photo-agent", "Read text on 3 board photos", "completed", "1 empty"],
+        ["document-agent", "Outline Lecture 01, 02 and 04 slides", "completed", "3 files"],
+        ["document-agent", "Write notes for Lectures 01, 02 and 04", "completed"],
+        ["document-agent", "Write the revision sheet", "completed"],
+      ]);
+    }
+    if (!live()) return;
+    setStep(4);
+    say(`<p>Lecture 04 only has slides, so its note is marked as partial. Lecture 03 still has no usable material.</p>`);
+    preview([["Lecture 04 notes", NOTES["Lecture 04"]], ["Revision sheet", sheet(true)]]);
+    const second = mode.value === "new"
+      ? ["Lecture 04 - notes.md", "Operating Systems - revision sheet 2.md"]
+      : ["Lecture 01 - notes 2.md", "Lecture 02 - notes 2.md", "Lecture 04 - notes.md", "Operating Systems - revision sheet 2.md"];
+    if (!(await saveFlow(second, true, live))) return;
+    say(`<p>All done. Next week, just ask again and I'll pick up only what's new.</p>`);
+    $("prompt-label").textContent = "End of demo";
+    $("chips").innerHTML = "";
+    const again = document.createElement("button");
+    again.type = "button"; again.className = "chip primary"; again.textContent = "Start over";
+    again.addEventListener("click", restart);
+    $("chips").appendChild(again);
+  }
+
+  async function saveFlow(names, repeat, live) {
+    say(`<p>I'd like to save these files to <b>Operating Systems › Revision</b>${repeat ? ". Existing files are never overwritten, so names that are taken get a number" : ""}:</p>
+      <ul>${names.map((n) => `<li>${n}</li>`).join("")}</ul><p>Your original recordings, slides and photos won't be changed.</p>`);
+    const go = await choices([["Save", 1, true], ["Don't save", 0]]);
+    if (!live()) return false;
+    me(go.text);
+    if (!go.value) {
+      add(`<div class="callout bad"><b>Cancelled.</b> Nothing was saved. The notes stay in this conversation so you can copy them.</div>`);
+      endWith("Start over");
+      return false;
+    }
+    setStep(5);
+    await agents([["file-agent", "Make sure Revision/ exists (Step 8)", "waiting_approval"]]);
+    if (!live()) return false;
+    say(`<p><b>Approval needed.</b> UGOS asks you to approve ${repeat ? "" : "creating the Revision folder and "}writing ${names.length} new files in it.</p>`);
+    const ok = await choices([["Approve", 1, true], ["Deny", 0]], "UGOS approval");
+    if (!live()) return false;
+    me(ok.value ? "Approve" : "Deny");
+    if (!ok.value) {
+      add(`<div class="callout bad"><b>Approval denied.</b> Nothing was saved, and no files or folders were changed.</div>`);
+      endWith("Start over");
+      return false;
+    }
+    await agents([
+      ["file-agent", repeat ? "Revision/ already exists" : "Create Revision/", "completed"],
+      ...names.map((n) => ["knowledge-agent", `Save ${n}`, "completed", "verified"]),
+    ]);
+    if (!live()) return false;
+    saved.forEach((f) => { f.isNew = false; });
+    names.forEach((n) => saved.push({ name: n, ext: "MD", isNew: true }));
+    renderFiles();
+    add(`<div class="callout ok"><b>Saved ${names.length} files</b> in Operating Systems › Revision. Open them from the file list on the left.</div>`);
+    return true;
+  }
+
+  function endWith(label) {
+    $("prompt-label").textContent = "End of demo";
+    $("chips").innerHTML = "";
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip primary"; b.textContent = label;
+    b.addEventListener("click", restart);
+    $("chips").appendChild(b);
+  }
+
+  function contentFor(name) {
+    if (name.startsWith("Lecture 01")) return NOTES["Lecture 01"];
+    if (name.startsWith("Lecture 02")) return NOTES["Lecture 02"];
+    if (name.startsWith("Lecture 04")) return NOTES["Lecture 04"];
+    return sheet(name.includes(" 2"));
+  }
+
+  $("files").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-open]");
+    if (!b) return;
+    $("viewer-title").textContent = "Revision/" + b.dataset.open;
+    $("viewer-body").innerHTML = `<div class="note">${contentFor(b.dataset.open)}</div>`;
+    $("viewer").hidden = false;
+    $("viewer-close").focus();
+  });
+  const closeViewer = () => { $("viewer").hidden = true; };
+  $("viewer-close").addEventListener("click", closeViewer);
+  $("viewer").addEventListener("click", (e) => { if (e.target.id === "viewer") closeViewer(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeViewer(); });
+
+  function restart() {
+    run = Symbol("run");
+    files = BASE_FILES.map((f) => ({ ...f }));
+    saved = [];
+    log.innerHTML = "";
+    renderFiles();
+    main(run);
+  }
+  $("restart").addEventListener("click", restart);
+  restart();
+})();
+</script>
