@@ -86,6 +86,8 @@ Say: *"Make revision notes for Lecture 03 of my Operating Systems course."*
 
 Extra edge checks if time allows:
 
+- Notes language: record Lecture 01 again in Hindi (or Hindi and English mixed) and ask for English notes. The exam hint should be quoted as spoken, with an English translation.
+
 - Ask for a course folder that does not exist: Uliya should say no folder matched and stop.
 - Decline the save at the preview: nothing should be saved, and the text is shown in the chat instead.
 

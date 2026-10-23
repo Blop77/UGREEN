@@ -12,6 +12,8 @@ All of the following was newly developed during the UGREEN Hackathon 2026 on AI 
 - Source tracing: every point in the notes and revision sheet names its source (recording time, slide page, or photo file name).
 - Lecturer-emphasis detection and the Conflicts and gaps section that compares the three sources.
 - The exam revision sheet format with ranked topics, practice questions and a quick-check list.
+- Notes in a different language from the lecture, with the lecturer's key sentences quoted in the original words.
+- Condensing long lecture transcripts in parts while keeping definitions, formulas, examples and exam hints word for word.
 - Repeat use during a semester: earlier notes are detected, only new lectures are processed, and the revision sheet is rebuilt from old and new notes.
 - The confirmation, read-only, no-overwrite and partial-result rules.
 

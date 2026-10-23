@@ -21,7 +21,7 @@ Say one of these to Uliya:
 
 Uliya then:
 
-1. Asks for the course folder (or finds it from the course name), which lectures to include, and the language of the recordings.
+1. Asks for the course folder (or finds it from the course name), which lectures to include, the language of the recordings, and the language you want the notes in.
 2. Shows a table of the recordings, documents and photos it found, grouped by lecture, and asks you to confirm.
 3. Transcribes the recordings, reads the board photos, and outlines the slides.
 4. Writes the lecture notes and the revision sheet.
@@ -43,6 +43,8 @@ If there is nothing new, Uliya tells you so and offers to rebuild only the revis
 - Board photos work best when taken straight on, in good light.
 - Video lectures: export the audio track first. Video files are listed but not transcribed.
 - Up to 12 lectures per run. For a full semester, run it once per unit.
+- Lectures in Hindi, or a mix of Hindi and English, can still give English notes: say the recording language and ask for notes in English. The lecturer's key sentences are quoted as spoken, with a translation.
+- Long lectures (over about 45 minutes) are condensed in parts first, so they take a little longer. Every definition, formula, example and exam hint is kept.
 
 ## What it never does
 

@@ -33,6 +33,7 @@ skill/lecture-revision-kit/   the Skill (this is what gets submitted)
 assets/                       Devpost thumbnail and gallery images (1200x800)
 docs/                         Round 1 proposal, Devpost story, Round 2 test plan and demo script
 testkit/                      sample course for Round 2 testing (not part of the Skill)
+tools/lint_skill.py           extra check: every {value} in SKILL.md is defined and used
 Makefile                      check and package helpers
 ```
 
@@ -42,6 +43,6 @@ Requires Node.js and the official UGOS Skill Creation Tool (`uliya-skill-kit`)
 installed in your AI assistant's skills folder.
 
 ```
-make check     # run the official static checker
+make check     # official static checker + our value lint
 make package   # build dist/lecture-revision-kit.zip for Round 1
 ```
