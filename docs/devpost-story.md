@@ -18,6 +18,10 @@ A UGREEN AI NAS already stores all of this in one place and can transcribe, read
 
 Every point carries its source, such as `[Rec 14:32]`, `[Slides p.7]` or `[Board IMG_2041]`, so nothing has to be taken on trust.
 
+It also handles real classrooms: a lecture in Hindi or a Hindi-English mix can give English notes, with the lecturer's key sentences quoted as spoken plus a translation, and long 60–90 minute lectures are condensed in parts without losing any definition, formula or exam hint.
+
+**Try the interactive demo:** https://claude.ai/artifact/HQG99SPCGsTxPYofMaPbP5 (a scripted walkthrough on a sample course; the results shown are illustrative, not real NAS output).
+
 ## How we built it
 
 The Skill is a Markdown orchestration workflow built with the official **UGOS Skill Creation Tool** (`uliya-skill-kit`). We used Claude Code as our AI assistant, as the starter kit recommends. Uliya delegates each step to a registered NAS expert:
@@ -30,7 +34,7 @@ The Skill is a Markdown orchestration workflow built with the official **UGOS Sk
 | Outline slides, write notes | `document-agent` | `ug-document` |
 | Save after confirmation | `knowledge-agent`, `file-agent` | `ug-knowledge`, `ug-filesystem` |
 
-Each step passes only the real result of the previous one. All five delegation states (`completed`, `failed`, `cancelled`, `waiting_user`, `waiting_approval`) and empty or partial results are handled explicitly. The package passes the official static checker with zero errors and zero warnings.
+Each step passes only the real result of the previous one. All five delegation states (`completed`, `failed`, `cancelled`, `waiting_user`, `waiting_approval`) and empty or partial results are handled explicitly. The package passes the official static checker with zero errors and zero warnings. We also wrote a small lint that checks every value passed between steps is defined, and prepared a sample course with planted test cases (a slide-versus-lecture conflict, exam hints, a video-only lecture and a blurred photo) for testing on a real NAS.
 
 ## Challenges
 
